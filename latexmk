@@ -1,0 +1,54 @@
+# %S ソースファイル
+# %O オプション
+# %D 出力ファイルに置き換えられます
+# 
+# 
+# 
+
+; DEBUG:これは20250528以前の状態
+; # TeXファイルをコンパイルしてDVIファイルを作成するのに使うコマンドを指定します。日本語の文章では platex がよく使われます
+; $latex = 'platex -synctex=1 -halt-on-error -interaction=nonstopmode -file-line-error %O %S';
+; # BiblatexのバックエンドにBibTeXを使用するときのコマンドを指定します。日本語の文章では pbibtex がよく使われます
+; $bibtex = 'pbibtex %O %S';
+; # Bibtexのバックエンドにbiberを使用するときのコマンドを指定します。
+; $biber = 'biber --bblencoding=utf8 -u -U --output_safechars %O %S';
+; # 索引を作成するときのコマンドを指定します。\usepackage{makeidx}を使うときに必要になります。日本語の文章ではmendexがよく使われます
+; $makeindex = 'mendex %O -o %D %S';
+; # LaTeXにより出力されたDVIファイルをPDFファイルに変換するコマンドです。日本語の文章ではdvipdfmxがよく使われます。
+; $dvipdf = 'dvipdfmx %O -o %D %S';
+; # 最大何回コンパイルするかを指定します。
+; $max_repeat = 5;
+; # PDFの出力形式を指定します（pdf_mode=3...$latexにより dviファイルを生成し、$dvipdfによりPDFを作成）
+; $pdf_mode = 3;
+;  DEBUG:20250528以前の状態
+
+; DEBUG:20250528の状態
+# platex (日本語対応・UTF-8指定)
+$latex = 'platex -kanji=utf8 -synctex=1 -interaction=nonstopmode';
+
+# dvipdfmx（DVI→PDF変換）
+$dvipdf = 'dvipdfmx -f ptex-ipaex.map %O -o %D %S';
+
+# ビルド方式をDVIに固定（1=pdf, 2=dvi→ps→pdf, 3=dvi→pdf）
+$pdf_mode = 3;
+
+# 拡張子など
+$bibtex_use = 1;
+$silent = 1;
+; DEBUG:20250528の状態
+
+# 出力ディレクトリを out に固定！
+; $out_dir = "out";
+
+# preview
+$pvc_view_file_via_temporary = 0;
+if ($^O eq 'linux') {
+    $dvi_previewer = "xdg-open %S";
+    $pdf_previewer = "xdg-open %S";
+} elsif ($^O eq 'darwin') {
+    $dvi_previewer = "open %S";
+    $pdf_previewer = "open %S";
+} else {
+    $dvi_previewer = "start %S";
+    $pdf_previewer = "start %S";
+}

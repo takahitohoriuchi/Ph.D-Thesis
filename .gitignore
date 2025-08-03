@@ -1,0 +1,38 @@
+# LaTeX中間生成物
+*.aux
+*.log
+*.out
+*.toc
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.dvi
+*.lof
+*.lot
+
+# PDF（必要なら無視）
+*.pdf
+
+# VSCode設定
+.vscode/
+
+# macOSごみ
+.DS_Store
+
+# コンパイル済みバイナリや一時ファイル
+*.tmp
+*.bak
+
+# 個人用フォルダ（たぴ用）
+避難/
+強制ビルド/
+
+# Gitが管理しないようにしたいノートファイルなど
+notes/
+
+# 画像
+images/
+
+fukugen/

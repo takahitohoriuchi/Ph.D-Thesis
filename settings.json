@@ -1,0 +1,53 @@
+{
+	// ツール
+	// 「pほげほげ」が、日本語に対応したやつ。
+	// デフォの「pdflatex」は日本語非対応！！！
+
+	"latex-workshop.latex.tools": [
+		{
+			"name": "ptex2pdf",
+			"command": "ptex2pdf",
+			"args": ["-shell-escape", "-l", "-ot", "-kanji=utf8 -synctex=1 -interaction=nonstopmode -halt-on-error -file-line-error", "%DOCFILE%.tex"]
+		}
+	],
+
+	/*
+
+    【レシピ】
+
+    ビルド時、↑のツールたちをどういう順番で呼ぶか。
+    「上から順」に呼ばれるので、
+    複数のレシピオブジェクトを上から連ねてけばよい。
+    あるひとつのオブジェクトのなかでも、「pdflatex -> bittex -> pdflatex X 2」 なら、読み込まれる順番は「pdflatex -> bittex -> pdflatex -> pdflatex」。
+
+    「latexmk」は、それらを自動ビルドするためのやつ。
+    ●プロジェクトごとに設定する場合
+    「latexmk」ファイルを、ふつうにプロジェクトの/ディレクトリに用意（隠しファイルの.がついてないことに注意）
+    ●全プロジェクト共通に設定する場合
+    「.latexmkc」ファイルを、ホームディレクトリに用意
+    
+    latexmkについて↓
+    http://www2.yukawa.kyoto-u.ac.jp/~koudai.sugimoto/dokuwiki/doku.php?id=latex:latexmk%E3%81%AE%E8%A8%AD%E5%AE%9A
+
+
+
+
+    
+    */
+	"latex-workshop.latex.recipes": [
+		{
+			"name": "latexmk",
+			"command": "latexmk",
+			"args": ["-synctex=1", "-interaction=nonstopmode", "-file-line-error", "-pdf", "-outdir=%OUTDIR%", "%DOC%"],
+			"env": {}
+		}
+		// {
+		// 	"name": "toolchain",
+		// 	"tools": ["ptex2pdf"]
+		// }
+	],
+	"latex-workshop.view.pdf.viewer": "tab",
+	"editor.renderControlCharacters": true,
+	"latex-workshop.message.badbox.show": true,
+	"latex-workshop.latex.autoBuild.run": "onFileChange"
+}

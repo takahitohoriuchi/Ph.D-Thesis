@@ -1,0 +1,214 @@
+\documentclass[a4paper,11pt]{jsreport}
+% jsarticleは短めの論文につかう。jsreportは長めの論文
+\usepackage{bm}
+\usepackage[dvipdfmx]{graphicx}%図
+\usepackage[dvipdfmx]{hyperref}%ハイパーリンク
+\usepackage{longtable}
+
+% \usepackage{soul}%改行あり下線機能
+% \usepackage{cleveref}
+
+
+\renewcommand{\figureautorefname}{図}
+\renewcommand{\tableautorefname}{表}
+\renewcommand{\equationautorefname}{式}
+% \renewcommand{\thechapter}{\thepart-\arabic{chapter}}
+% \renewcommand{\thefigure}{\Alph{part}-\arabic{chapter}.\arabic{figure}}
+% \renewcommand{\thetable}{\Alph{part}-\arabic{chapter}.\arabic{table}}
+% \crefname{section}{節}{節}
+% \crefname{chapter}{章}{章}
+
+
+\usepackage{tcolorbox}
+\tcbuselibrary{skins}
+
+
+% メタ認知記述はグレー背景
+\newtcolorbox{mynote}{
+  colframe=black,        % 線の色
+  boxrule=0.5pt,         % 線の太さ
+  colback=gray!10, 
+  sharp corners,         % 角を直角に
+  width=0.9\textwidth,   % 幅
+  left=6pt, right=6pt,   % 内側余白
+  top=6pt, bottom=6pt,   % 内側余白
+  enhanced,              % 高度な描画
+}
+
+% 連続写真合成
+\newtcolorbox{continuousphoto}{
+  colframe=white,        % 線の色
+    boxrule=0pt,
+    colback=white, % ← 白背景に明示するのが安全！
+    sharp corners,
+    width=\columnwidth,
+    % width=\textwidth,
+    % left=4pt, right=4pt, top=4pt, bottom=4pt,
+    before skip=1em, after skip=1em
+}
+
+% 表情エントリ
+\newtcolorbox{hyojoentry}{
+    colframe=white,        % 線の色
+    boxrule=0pt,
+    colback=gray!6, % ← 白背景に明示するのが安全！
+    sharp corners,
+    width=\columnwidth,
+    % width=\textwidth,
+    % left=4pt, right=4pt, top=4pt, bottom=4pt,
+    before skip=1em, after skip=1em
+}
+
+\hypersetup{
+    colorlinks=true, % リンクに色を付ける
+    linkcolor=black, % 内部リンク（\refコマンドで生成されるものなど）の色
+    citecolor=black, % 文献リンク（\citeコマンドで生成されるもの）の色
+    urlcolor=blue   % 外部リンク（ウェブサイトのURLなど）の色
+}
+\usepackage{booktabs}%表を美しく描く
+\usepackage{ascmac}
+\usepackage{enumitem}%Q&Aを付録でかくための
+\usepackage{bm}
+\usepackage{amsmath}
+\usepackage{todonotes}
+\usepackage{okumacro}
+\usepackage{listings}% ソースコード用
+\usepackage{mdframed}
+\usepackage{xcolor}% 色のパッケージ
+\setcounter{tocdepth}{3}
+\usepackage{color}
+\usepackage{subcaption}
+\usepackage{overpic}  % 図にナンバリング
+\usepackage{caption}
+\usepackage{tikz}
+\usepackage{float} % ← プリアンブルに追加
+% \usepackage{multirow} %グルーピングありの表
+\usepackage{tabularx}
+
+
+
+
+
+% ソースコード部分の色設定
+\definecolor{bg}{rgb}{0.09,0.09,0.09}
+% \newtcblisting{mylisting}{
+%   colback=black,    % 背景色を黒に設定
+%   colframe=black,   % 枠も背景と同色に
+%   listing only,
+%   listing options ={    
+%     language=java,              %　JSはなぜかJavaらしい？
+%     backgroundcolor=\color{bg},
+%     basicstyle=\color{white}\ttfamily,   % 基本スタイル
+%     keywordstyle=\color{blue},           % キーワードスタイル
+%     stringstyle=\color{orange},          % 文字列スタイル
+%     commentstyle=\color{green},          % コメントスタイル
+%     breaklines=true,                     % 長い行の折り返し
+%     numbers=left,                        % 行番号の表示
+%     numberstyle=\tiny\color{gray},       % 行番号スタイル
+%     frame=single                         % 枠線のスタイル
+%   }
+%   left=1mm, % 内側の余白を調整
+% }
+
+\lstset{    
+  language=java,              %　JSはなぜかJavaらしい？
+  backgroundcolor=\color{bg},
+  basicstyle=\color{white}\ttfamily,   % 基本スタイル
+  keywordstyle=\color{blue},           % キーワードスタイル
+  stringstyle=\color{orange},          % 文字列スタイル
+  commentstyle=\color{green},          % コメントスタイル
+  breaklines=true,                     % 長い行の折り返し
+  numbers=left,                        % 行番号の表示
+  numberstyle=\tiny\color{gray},       % 行番号スタイル
+  frame=single                         % 枠線のスタイル
+}
+
+% 用語の定義
+\newcommand{\hyojoForm}{表情図形}
+\newcommand{\node}{点}
+\newcommand{\edge}{連結線}
+\newcommand{\dynamicKrkr}{動的連結}
+
+% このdocumentclassからbeginまでを、プリアンブルと呼ぶ
+% NOTE:パスを指定するとき、「./」は書いてはいけない！！！！
+\includeonly{
+  title.tex,
+  introduction/how2read.tex,  
+  introduction/chapter1.tex,
+  introduction/chapter2.tex,
+  introduction/chapter3.tex,
+  introduction/chapter4.tex,
+  part1/chapter1.tex,  
+  part1/chapter2.tex,
+  part1/chapter3.tex,
+  part1/chapter4.tex,
+  part1/chapter5.tex,
+  part2/chapter1.tex,
+  part2/chapter2.tex,
+  part2/chapter3.tex,
+  part2/chapter4.tex,
+  part2/chapter5.tex,
+  part2/chapter6.tex,    
+  conclusion/chapter1.tex,
+  conclusion/addendum.tex,  
+  conclusion/acknowledgement.tex,
+  } 
+
+\begin{document}
+\input{title.tex}
+\pagenumbering{roman}  % i, ii, iii, ...
+\input{abstract_jp.tex}
+\input{abstract_en.tex}
+% 脚注をアスタリスクなしの連番形式にする
+\makeatletter
+\renewcommand{\thefootnote}{\arabic{footnote}}
+\makeatother
+% 目次
+\tableofcontents
+% 図目次
+\listoffigures
+% 表目次
+\listoftables
+% % \input{abstract.tex}
+\include{introduction/how2read.tex}
+\clearpage
+\pagenumbering{arabic}
+\include{introduction/chapter1.tex}
+\include{introduction/chapter2.tex}
+\include{introduction/chapter3.tex}
+\include{introduction/chapter4.tex}
+
+\include{part1/chapter1.tex}
+% \include{part1/chapter6.tex}
+\include{part1/chapter2.tex}
+\include{part1/chapter3.tex}
+\include{part1/chapter4.tex}
+\include{part1/chapter5.tex}
+
+\include{part2/chapter1.tex}
+\include{part2/chapter2.tex}
+\include{part2/chapter3.tex}
+\include{part2/chapter4.tex}
+\include{part2/chapter5.tex}
+\include{part2/chapter6.tex}
+
+\include{conclusion/chapter1.tex}
+\include{conclusion/addendum.tex}
+\include{conclusion/acknowledgement.tex}
+
+% 下のサイトにいろんなスタイルあり。どれかを選ぶ。
+% https://mathlandscape.com/latex-bibstyles/
+
+\bibliographystyle{jplain}%日本語連番形式
+% \bibliographystyle{apalike}
+% \bibliographystyle{apa}
+\bibliography{reference}
+% \bibliographystyle{acm}%ACM形式
+
+% \bibliographystyle{apa}
+% \printbibliography
+
+% :::補論・付録
+% \include{conclusion/appendix.tex}
+
+\end{document}

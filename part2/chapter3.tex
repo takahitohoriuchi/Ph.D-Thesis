@@ -1,0 +1,645 @@
+\chapter{HJ-Playground}
+\label{chapter:hj-playground}
+
+\section{アプリ概要}
+本研究では、動いている身体の表情の感得を促すwebアプリ「HJ-Playground」を制作した。
+webブラウザでプレイするアプリであり、主たるユーザは身体運動学習者である。
+本アプリは、あらかじめ計測したユーザ自身/他者の運動データ（各部位の三次元時系列位置情報）を、画面内の三次元空間に動く点群として描き、
+ユーザに、それら点どうしのあいだに線分や円などの「補助線を描きくわえて図形を作図」することを促す（\autoref{fig:playfull_menu}）。
+これを\textbf{表情図形}と呼ぶ。
+ユーザには、作図した表情図形を鑑賞しながら、感得している表情をオノマトペで命名し、そのさなかで生まれる問いをからだメタ認知で内省記述することを促す。
+本章各節で、各種仕様とその意義を説明する。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{./images/hjplayground/playview.pdf}
+  \caption{メイン画面（左右ドロワメニュー展開時）}          %和文 cap　tion  
+  \label{fig:playfull_menu}
+\end{figure}
+
+\section{アプリのメイン画面の構成}
+\label{sec:mainpage}
+画面全体に拡がるプレイスペースで表情図形を作図・鑑賞するのを基本として、
+この画面の手前側に覆い被さるかたちで、出し入れ可能な３つのメニューがある（\autoref{fig:screenconfiguration}）。
+% 画面構成（スクショ）
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{./images/screenconfiguration.pdf}
+  \caption{メイン画面の画面構成}          %和文 cap　tion  
+  \label{fig:screenconfiguration}
+\end{figure}
+
+% 画面構成の説明
+\begin{description}
+  \item[a.プレイスペース]\mbox{}\\
+  アプリ画面全体に拡がる抽象的な三次元空間である。
+  この空間内にて表情図形を鑑賞したり作図したりする。
+  プレイスペースには、デフォルトモードと\textbf{編集モード}とがある。
+  デフォルトモードでは背景が薄いグレーとなり、表情図形の鑑賞や、下記のb〜cの設定をしたりする。
+  編集モードでは背景が濃いグレーとなり、点群のあいだに補助線を引いたり、再生制御やカメラ操作したりする。
+  cmdキーを押しっぱなしにしているあいだのみ、編集モードになる（\autoref{fig:toggleedittingmode}）。
+  
+
+  \item[b.上バーメニュー]（画面上下スクロールで出し入れ）\mbox{}\\
+  データ選択画面に遷移したり、言語設定（英語/日本語）・サウンド設定などをおこなう。
+  なお、プレイ中はあまり頻繁にはいじらないだろう。    
+  
+  \item[c.左ドロワメニュー]\mbox{（\textbf{tab}キーでトグル形式出し入れ。\autoref{fig:drawermenu}参照。）}\\  
+  各種セッティングをおこなう。
+  全4段からなるアコーディオン形式で開閉可能なUIになっている。
+  1段目には「備え付け補助線パタン（後述）」の選択肢チップ群が並び、
+  2段目には「補助線タイプ（後述）」の選択肢チップ群が並び、
+  3段目には表情図形のパラメータ「軌跡」を調整するスライダが並ぶ。
+  これらについては後述する。
+  4段目にはその他の表示設定用のスイッチが5つ並ぶ。
+  スイッチの内容は以下である。（）内部はデフォルト値を示す。
+  \begin{itemize}
+    \item 点の大きさに遠近感をつけるか？（ON）
+    \item XYZ座標軸を表示するか？（OFF）
+    \item 世界球を表示するか？（ON）
+    \item マーカーのラベルをみせるか？（OFF）
+    \item 地面のプレートをみせるか？（OFF）
+  \end{itemize}
+  なお\autoref{fig:screenconfiguration}において4段目は閉じている。
+
+  \item[d.右ドロワメニュー]\mbox{（\textbf{\texttt{]}}キーで出し入れ。\autoref{fig:drawermenu}参照。）}\\
+  「表情エントリ」（後述）を、編集したり、データベースへ保存したり、データベースからロードしたりする。
+  上段の「マイ表情コレクション」は、現在プレイ中の身体運動データに対してユーザ自身が作成・登録した表情エントリ群の一覧である。
+  それらを選択して呼び出せる。
+  中段の「みんなの表情ギャラリー」は、現在プレイ中の身体運動データに対して他ユーザが作成した表情エントリ群の一覧である。
+  中段以降には、ユーザが現在作成・編集中の表情エントリの詳細編集エリアである。
+  その表情エントリの、「表情オノマトペ」と「内省記述」（後述）と、その表情エントリの開始/終了フレームを設定するスライダと、その表情エントリの保存ボタン・コピーボタン・削除ボタンが並ぶ。
+
+\end{description}
+
+% ドロワメニュー展開
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\textwidth]{./images/drawermenu.pdf}
+  \caption{左右ドロワメニュー展開のようす}          %和文 cap　tion  
+  \label{fig:drawermenu}
+\end{figure}
+
+% 編集モード
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\textwidth]{./images/edittingmode_1.pdf}
+  \caption{編集モード}          %和文 cap　tion  
+  \label{fig:toggleedittingmode}
+\end{figure}
+
+
+\section{プレイ方法}
+\subsection{プレイ対象身体運動データを選択する}
+ユーザはホーム画面（\autoref{fig:home}）またはマイページ画面（\autoref{fig:mypage}）から、プレイする身体運動データを選択する。
+ホーム画面は、アプリのデータベースに登録されたすべての身体運動データが選択肢として表示され、
+マイページ画面は、自分が過去にプレイした身体運動データのみが選択肢に表示されている\footnote{
+なお、\autoref{fig:home}と\autoref{fig:mypage}内のグレーの短冊形の部分は、実際のデータ名をモザイクで隠している。  
+}。
+どちらの画面でも、身体運動データをクリックして選択すると、\ref{sec:mainpage}節で述べたメイン画面に遷移する。
+次項以降の説明はすべてメイン画面においての説明である。
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{./images/home.pdf}
+  \caption{ホーム画面（プレイする身体運動データを選択する）}          %和文 cap　tion  
+  \label{fig:home}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{./images/mypage.pdf}
+  \caption{マイページ画面（プレイする身体運動データを選択する）}          %和文 ion  
+  \label{fig:mypage}
+\end{figure}
+\subsection{再生制御・カメラ制御（表情図形作図）}
+本アプリでは、一般的な動画再生ソフトと同様のキー割り当てで直感的な再生制御を促す（\autoref{table:play}）。
+% 再生制御
+\begin{table}[htbp]
+  \begin{center}
+  \caption{再生制御方法}                %和文 caption  
+  \label{table:play}
+  \begin{tabular}[hbt]{c c c}
+  \hline
+  \bf パラメータ & \bf 操作方法 \\
+  \hline
+  再生/一時停止 & スペースキー\\
+  コマ送り & 右矢印キーまたはプレイヤースライダ \\
+  コマ戻し & 左矢印キーまたはプレイヤースライダ \\  
+  \hline
+  \end{tabular}
+  \end{center}
+\end{table}
+
+プレイスペースでは、3D空間内で身体運動を取り囲むようなカメラから眺めることができる。
+カメラの位置は「極座標形式の世界座標系」で定義しており、
+ユーザは編集モードでカメラを「半径可変の球面上」を移動させるように制御できる（\autoref{table:camera}・図\ref{fig:camera}）。
+編集モード時、カメラの注視点が赤いバツ印で表示される（\autoref{fig:toggleedittingmode}の２枚目や\autoref{fig:editting}の2・3）。
+カメラの注視点は常に$(x,y,z) = (0,100cm,0)$である（y座標が運動データの高さ方向になるように撮影することを想定している）。
+カメラの上方向は常にカメラ位置の経線北極方向である。
+
+\begin{table}[htbp]
+  \centering
+  \begin{minipage}[t]{0.45\textwidth}
+    \raggedright
+    \vspace{0pt}
+    \caption{カメラ制御方法}
+    \label{table:camera}
+    \begin{tabular}{c p{0.55\textwidth}} % 折り返し対応
+      \hline
+      \bf パラメータ & \bf 操作方法 \\
+      \hline
+      動径$r$ & cmd + 上下スワイプまたはピンチインアウト \\
+      緯度$\phi$ & cmd + 上下ドラッグ \\
+      経度$\theta$ & cmd + 左右ドラッグ \\
+      \hline
+    \end{tabular}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.52\textwidth}
+    \centering
+    \vspace{0pt}
+    \includegraphics[width=\linewidth]{./images/camControl_page1.pdf}
+    \captionof{figure}{カメラ制御方法の図示} % ←ここがポイント
+    \label{fig:camera}
+  \end{minipage}
+\end{table}
+
+\subsection{点の表示/非表示を切り替える（表情図形作図）}
+身体運動データを選択してメイン画面に遷移してきたとき、
+はじめの状態では、身体運動データの点だけが表示されている（つまり、撮影時の関節点が空間上に表示されている）。
+\ref{subsec:sakuzu}項で説明するように点のあいだに補助線を引くことが本アプリの主要な特徴であるが、
+ユーザは、これら各点の表示/非表示を切り替えることができる。
+編集モード時に以下の操作をすることで、各点の表示/非表示を切り替えることができる。
+\begin{itemize}
+  \item \textbf{cmd + d}: マウスオンしている点の表示/非表示を切り替える（トグル形式）
+  \item \textbf{cmd + v}: 複数点の表示を一括で切り替える。全点表示→全点非表示→孤立点のみ非表示→全点表示・・・と3状態でスイッチする。孤立点とは、ほかのどの点とのあいだにも補助線が引かれていない点である。
+\end{itemize}
+
+複数点の表示の一括切り替えのようすを\autoref{fig:cmdv}に示した。
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{./images/cmd+v.pdf}
+  \caption{複数点の表示の一括切り替え（cmd+v）}
+  \label{fig:cmdv}
+\end{figure}
+
+
+\subsection{手作業で補助線を引く（表情図形作図）}
+\label{subsec:sakuzu}
+動く点群の布置に補助線を引き、図形を作図することを促す（\autoref{fig:editting}）。
+補助線は、「手作業で引く」のを基本とし、「備え付け補助線パタン（次項）」をもちいて引くこともユーザに促す。
+
+\textbf{手作業で補助線を引く}やりかたについてまず述べる。
+手作業で補助線を引くには、cmdキーを押しっぱなしにしたままおこなう（編集モード）。
+\autoref{fig:editting}は、映像内人物がこちら側を向いて自身の右側に重心を傾けているシーンである。
+局面1ですでに「頭頂-胸骨下端」「胸骨下端-右手首」に補助線が引かれている状態である。
+ここで、cmdキーを押しながら局面2で右手首をクリックし局面3で左膝外側（大腿骨外顆）をクリックすることで、局面4で新たに「右手首-左膝外側」間に補助線を引いている。
+
+ユーザ自ら補助線を引くという仕様にしたのは、ユーザに主体的に問うことを促すためである。
+「補助線」とは幾何学でもそういう概念である。
+問うために自ら引くのであり、
+それまで潜在していた関係性を図形として顕在化させながら、問いを深めたり前進させる意義がある。
+ユーザは「人型」にとらわれた図形にする必要はない。
+
+cmd+Eキーのキーボードショートカットにより、マウスオンしている点からその他のすべての表示中の点と補助線を引くことができる。
+
+% 補助線を引く様子
+\begin{figure}[htbp]
+  \begin{continuousphoto}
+
+  \begin{center}
+    \begin{overpic}[width=0.2\columnwidth]{images/hjplayground/edit-1.pdf}
+      \put(2,90){ 1}
+    \end{overpic}
+    \hspace{0.05em}
+    \begin{overpic}[width=0.2\columnwidth]{images/hjplayground/edit-2.pdf}
+      \put(2,90){ 2}
+    \end{overpic}
+    \hspace{0.05em}
+    \begin{overpic}[width=0.2\columnwidth]{images/hjplayground/edit-3.pdf}
+      \put(2,90){ 3}
+    \end{overpic}
+    \hspace{0.05em}
+    \begin{overpic}[width=0.2\columnwidth]{images/hjplayground/edit-4.pdf}
+      \put(2,90){ 4}
+    \end{overpic}
+  \end{center}
+
+  \end{continuousphoto}
+
+  \caption{補助線を引く様子}            
+  \label{fig:editting}
+\end{figure}
+
+
+補助線パタンは、ユーザみずから手作業で引いたものであれ、備え付けパタン（次項）を適用したものであれ、それが再生中に動的に変わるといった仕様（速度といった運動学的情報からリアルタイム計算して、それに応じて補助線パタンが変わるといった仕様）
+は本アプリでは組み込んでいない。
+
+\subsection{備え付け補助線パタンを適用して補助線を引く（表情図形作図）}
+\textbf{備え付け補助線パタン}は左ドロワメニューに設えてある。
+チップボタンが並んでおり（\autoref{fig:playfull_menu}）、
+それぞれのチップボタンを押すと、パタンにしたがって点どうしのあいだに補助線が引かれる(\autoref{fig:playfull_menu}左側1段目)。
+「備え付け補助線パタン」の一覧を、\autoref{table:presetpatterns}に示す。
+それぞれのパタンの実例を\autoref{fig:presetpatterns1}・\autoref{fig:presetpatterns2}に示す。
+
+
+% 備え付け補助線パタン一覧実例（１）
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{./images/presetpatterns1.pdf}
+  \caption{備え付け補助線パタン一覧（その1）}          %和文 cap　tion  
+  \label{fig:presetpatterns1}
+\end{figure}
+
+% 備え付け補助線パタン一覧（２）
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{./images/presetpatterns2.pdf}
+  \caption{備え付け補助線パタン一覧（その2）}
+  \label{fig:presetpatterns2}
+\end{figure}
+
+% 備え付け補助線パタン一覧表
+\begin{table}[htbp]
+  \caption{備え付け補助線パタンの一覧}
+  \label{table:presetpatterns}
+  \begin{center}
+  \begin{tabularx}{\textwidth}{>{\bfseries}lX}
+    \hline
+    パタン名 & 説明 \\
+    \hline
+    三角形で埋める & 点群のあいだが三角形で埋め尽くされるようにする。三角形群は、なるべく多くが鋭角三角形になるように、かつ、線分どうしが交わらないようにする。ドロネー三角形のアルゴリズムと同様である。 \\
+    \hline
+    全体の輪郭 & 表示中の全点の重心からある点からスタートして結果的に全点をむすんでできる閉領域（図形）生成する。 \\
+    \hline
+    輪ゴムかける & 表示中の全点を内部に含む最小の凸多角形（つまり凸包）を生成する \\
+    \hline
+    うずまき & 表示中の全点の重心から最も遠い点から、渦をまくように点同士を一筆書きしてゆく。 \\
+    \hline
+    きざみのり & 表示中の各点において自身から最も近い点とペアをなすよう結ぶ。ペア形成の順序は、すべての2点の組み合わせのうちもっとも距離の近い2点同士から結んでゆき、必ずどの点も１ペアのみ形成するようにする。\\
+    \hline
+    横雨 & 表示中の各点において自身ともっとも画面上での縦の位置が近い点同士とペアをなすよう結ぶ。ペア形成の順序は、すべての2点の組み合わせのうちもっとも縦位置の近い2点同士から結んでゆき、必ずどの点も１ペアのみ形成するようにする。\\
+    \hline
+    雨 & 表示中の各点において自身ともっとも画面上での横の位置が近い点同士とペアをなすよう結ぶ。ペア形成の順序は、すべての2点の組み合わせのうちもっとも横位置の近い2点同士から結んでゆき、必ずどの点も１ペアのみ形成するようにする。 \\
+    \hline
+    ランダム一筆がき（近） & 表示中全点からランダムに一点選んで開始点とし、そこからもっとも近い点と結び、次にその点からもっとも近い点をむすび、というふうに一筆書きしてゆく。 \\
+    \hline
+    ランダム一筆がき（遠） & 表示中全点からランダムに一点選んで開始点とし、そこからもっとも遠い点と結び、次にその点からもっとも遠い点をむすび、というふうに一筆書きしてゆく。\\
+    \hline
+    川 & 表示中全点からランダムで一点を選び、そこから本流から支流へと分岐してゆく川のように、すべての孤立点がなくなるまで結ぶ。 \\
+    \hline
+    左から右に一筆がき & 表示中全点からもっとも左にある点から、画面上で横位置がもっとも近い点を順に一筆書きでむすんでゆく。 \\
+    \hline
+    上から下に一筆がき & もっとも上にある点から、画面上で縦位置がもっとも近い点を順に一筆書きでむすんでゆく。 \\
+    \hline
+  \end{tabularx}
+  \end{center}
+\end{table}
+
+\autoref{table:presetpatterns}の補助線を引くアルゴリズムの引数になっているのは、基本的には、
+それらのチップボタンをクリックしたときの再生フレームにおける、表示中各点の画面上での二次元位置である。
+すなわち、あるチップボタンを押したとき、そのときの、カメラの位置（どこから運動データを眺めるか）と再生フレームによって、実際にどう連結されるかは変わる。
+くわえて、\autoref{table:presetpatterns}の説明にある「表示中の全点」という部分も重要である。
+ボタンクリック時に非表示になっている点については、連結はされないし、連結パタンの計算アルゴリズムからは除外されるようにしてある。
+
+\autoref{fig:presetpatterns1}・\autoref{fig:presetpatterns2}は、
+（図内最上部に施した説明のように）ダンスの運動データを例に、備え付け補助線パタン各種を適用するとどうなるかを示している。
+なおこの運動データは続く\ref{chapter:jissenmethod}・\ref{chapter:jissenresult}章で説明する対象者Aのoldmanという動作である。
+いずれも、一コマ目（1列目のコマ）で備え付け補助線パタンを適用しており、
+それが再生するとどのように補助線によってできた図形がふるまうのか（変形するのか）を示している。
+比較のため、どのパタンについてもカメラ位置とコマの位置などは条件はそろえてある。
+補助線パタンがちがえば再生中に動きのなかでみえてくるもの（つまり「表情」）が異なりそうだ、ということが実感できるであろう。
+
+備え付け補助線パタンは、ただそのまま適用してその引かれた補助線パタンをそのまま受け入れる必要はない。
+むしろ奨励するのは、備え付け補助線パタンの適用したをヒントにしながら、
+そこからさらにユーザが手作業で作図して補助線パタンを変更したり、
+新しい作図の手がかりを得ることである。
+
+\subsection{補助線スタイルをえらぶ（表情図形作図）}
+\label{sec:hojosentype}
+\textbf{補助線スタイル}を多種類用意した。
+左ドロワメニューに並ぶ各チップ（\autoref{fig:playfull_menu}左側2段目）をクリックすると、補助線のスタイルが変わる。
+デフォルトのスタイルは2点間の「線分」である。
+補助線スタイルの一覧を\autoref{table:hojosen_type}に示す。
+B.ムナーリのデザイン教本『空想旅行』\cite{munari:1992}では、あるランダムな点群の布置に、線や円など素朴な描画要素を描きくわえて「ふたりひとくみ」や「音符」や「摩天楼」や「発芽」など、実に様々に点群の関係づけや見立てができることを示している。
+\ref{sec:design}で述べた先行研究\cite{konno_et_al:2016}でも様々なインスタレーション環境の条件（映像効果の種類）から選ぶことを促している。
+これらに関連して、補助線のスタイルによってみえる「表情」は変わりうると考えた。
+\begin{table}[htbp]
+  \begin{center}
+  \caption{補助線スタイル一覧}                % 和文 caption  
+  \label{table:hojosen_type}
+  \begin{tabular}[hbt]{c l}
+  \hline
+  \bf スタイル名 & \bf 説明 \\
+  \hline
+  デフォルト & 各線分IJ \\
+  線延長 & 各線分IJを両端に1倍ずつ延長 \\
+  線延長10倍 & 各線分IJを両端に5倍ずつ延長\\
+  外接円 & 各△IJKの外接円 \\
+  内接円 & 各△IJKの内接円 \\
+  外/内接円 & 各△IJKの外接円と内接円 \\
+  注視点からの円 & 各△IJOの外接円（Oはカメラ注視点） \\    
+  大三角 & 各△IJKを3倍拡大し重心をOに固定で描く \\    
+  \hline
+  \end{tabular}
+  \end{center}
+\end{table}
+
+\subsection{オノマトペを付与する}
+本アプリでは廣松の表情論\cite{hiromatsu:1989}を受け、ユーザには作図した表情図形をとおして感得した「表情」をオノマトペで表現することを促す。
+オノマトペはオノマトペ入力欄（\autoref{fig:playfull_menu}右ドロワニュー内の中段）に書く。
+オノマトペを吟味しやすくするために、入力したオノマトペは自動的に表情図形の背後に重ね描かれるようにした。
+ユーザは既存のオノマトペだけに囚われず、創作オノマトペ\cite{otsuka:2015}を与えてもよい。
+
+% \todo{応用編の音節機能}
+% 応用編の機能として、ユーザはオノマトペを「ぺっちゃ-んこ」のように「音節」に分けて書くこともできる。
+% 音節に分けて書くと、「音節ごとの再生」「音節ごとの内省記述」の機能も自動で開放される。
+\subsection{内省記述：からだメタ認知をもちいて}
+
+ユーザには、鑑賞体験をからだメタ認知し、内省記述欄に記述することを促す。
+たとえば、身体感覚、情動、想起されるものごと、
+表情図形、身体運動、それらの音韻で表象した理由
+といった関係性について問い、書きつけることが重要である。
+記述欄には、このことをガイドするプレースホルダを記載しているが、
+表情が問いを生み出すという考えのもと、書く内容に強い制約は設けていない。
+
+\subsection{表情エントリの保存・読み込み・コピー}
+表情図形の構成要素を示す（\autoref{table:expression_elements}）。
+表情図形を構成する要素は、どの点が表示されているかや補助線のパタンとスタイルといった「空間的情報」だけではない。
+フレーム範囲や軌跡の長さと軌跡最小単位などの「時間的情報」も、表情図形を構成する要素とした。
+さらに、表情図形の構成要素には、身体運動（図形）をどこから眺めるかというカメラパラメータさえもふくむようにした。
+科学的な態度からすれば、観察する主体であるユーザ（つまりカメラ側）は、観察対象である身体運動から切り離すことで、
+なるべき客観的な観察を促すのが通常であろう。
+しかし、動いている身体の表情とは、観察主体と観察対象との「あいだ」\cite{kimura:2005}に生じる現象である。
+本アプリでは、その思想を優先的に反映するために、カメラパラメータも表情図形の構成要素の一部とした。
+
+% 表情図形の構成要素
+\begin{table}[htbp]
+  \begin{center}
+  \caption{表情図形の構成要素}                % 和文 caption  
+  \label{table:expression_elements}
+  \begin{tabular}[hbt]{c l l}
+  \hline
+  \bf 構成要素 & \bf 説明 \\
+  \hline
+  再生コマ範囲 & どこからどのコマか \\
+  補助線パタン & どの点どうしの関係の補助線か　\\
+  補助線スタイル & 線分、延長線、内接円など \\
+  構成する点群 & どの点が表示/非表示か \\
+  軌跡の長さ & 点や補助線の軌跡の長さ \\
+  軌跡の最小単位 & 軌跡の幅（1軌跡の何コマ差か） \\
+  カメラ位置 & どこから眺めているか & \\
+  遠近感 & 点の大きさが距離によらず同じか/違うか \\  
+  \hline
+  \end{tabular}
+  \end{center}
+\end{table}
+
+ユーザには表情図形・オノマトペ・内省記述の３つを１つの\textbf{表情エントリ}としてセットで保存することを促す。
+表情エントリを保存すると、右ドロワメニューの「マイ表情コレクション」（\autoref{fig:playfull_menu}右上段）にオノマトペが記載されたチップとして追加される。
+チップをクリックすると、その表情エントリが読み込まれ、その表情エントリを再鑑賞できる（\autoref{fig:loadhyojoentry}）。
+\autoref{fig:loadhyojoentry}では、2枚目から3枚目にかけて、異なる表情エントリを選択したのに応じて、カメラの位置（表情エントリの構成要素である。\autoref{table:expression_elements}参照。）
+も切り変わっていることが確認できる。
+% my表情エントリのロード
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[height=\textheight]{./images/hyojoentryloading.pdf}
+  \caption{保存済の表情エントリをDBから読み込む}          %和文 cap　tion  
+  \label{fig:loadhyojoentry}
+\end{figure}
+
+同様に「みんなの表情ギャラリー」（\autoref{fig:playfull_menu}参照）からは、他ユーザがその身体運動に対して作成した表情エントリを鑑賞することができる。
+任意の表情エントリは、右下の「コピー」ボタンを押すと、表情エントリをコピーし再編集し、元の表情エントリとは別の表情エントリとして保存することができる（マイ表情コレクションに追加される）。
+これを組み合わせた一連のシナリオを、以下\autoref{fig:senario1}〜\autoref{fig:senario2}に示す。
+\begin{figure}[H]
+  \centering
+  \includegraphics[height=\textheight]{./images/senario1.pdf}
+  \caption{シナリオ（局面1）:他ユーザの表情エントリを鑑賞}          %和文 cap　tion  
+  \label{fig:senario1}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[height=\textheight]{./images/senario2.pdf}
+  \caption{シナリオ（局面2）:他ユーザの表情エントリを自分の手元にコピー}          %和文 cap　tion  
+  \label{fig:senario2}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[height=\textheight]{./images/senario3.pdf}
+  \caption{シナリオ（局面3）:コピーした表情エントリを再編集}          %和文 cap　tion  
+  \label{fig:senario3}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\textwidth]{./images/senario4.pdf}
+  \caption{シナリオ（局面4）:再編集した表情エントリをマイ表情コレクションへ登録}          %和文 cap　tion  
+  \label{fig:senario4}
+\end{figure}
+
+
+% 表情エントリの構成とユーザと身体運動データの関係性
+\begin{figure}[H]
+  \centering  
+  \includegraphics[width=0.9\textwidth]{./images/hyojoentrymovementconfiguration@2x.pdf}
+  \caption{表情エントリの構成とユーザと身体運動データの関係性}          %和文 cap　tion  
+  \label{fig:hyojoentryconfiguration}
+\end{figure}
+
+表情エントリ（とその構成）とユーザと身体運動データとの一般的な関係性を示す（\autoref{fig:hyojoentryconfiguration}）。
+一般に、ひとつの身体運動データに対して、複数のユーザがそれぞれ複数の表情エントリを作成できる。
+このようにして、ひとつの身体運動に多彩な表情を感得し、採集することを促す。
+
+\subsection{作図と編集操作のキーボードショートカット}
+作図と編集操作のキーボードショートカット一覧を\autoref{table:keyboardshortcut}に示す。
+ユーザにはこの一覧は、編集モード時にポップアップで表示される（\autoref{fig:toggleedittingmode}の2枚目参照）
+\begin{table}[htbp]
+  \caption{キーボードショートカット}
+  \label{table:keyboardshortcut}
+  \begin{center}
+  \begin{tabularx}{\textwidth}{>{\bfseries}lX}
+    \hline
+    キーコマンド & 説明 \\
+    \hline
+    cmd + V & 複数点の表示を一括で切り替える。全点表示→孤立点のみ非表示→全点非表示→全点表示・・・と3状態でスイッチする。 \\
+    \hline
+    cmd + D & マウスオンしている点の表示/非表示を切り替える \\
+    \hline
+    cmd + E & マウスオンしている点と、表示中他全点とむすぶ/外す \\
+    \hline
+    cmd + R & 表情図形を初期化（リセット） \\    
+    \hline
+    cmd + S & 表情エントリを保存（または更新） \\    
+    \hline
+    cmd + Z & 作図の操作をひとつ前に戻す \\    
+    \hline
+    cmd + shift + Z & やりなおす（作図の操作をひとつ最新状態へ進める） \\    
+    \hline
+  \end{tabularx}
+  \end{center}
+\end{table}
+
+% \subsection{その他の表示設定}
+% \todo{座標とかのやつ。画像を示す。}
+
+
+
+\section{システム構成と運用にもちいている技術}
+
+本アプリは、プログラミング言語JavaScript、HTML、CSSによって制作している。
+主にもちいたJavaScriptライブラリを\autoref{table:libraries}に示す\footnote{
+  第一部の物語の\ref{sec:monowotool}節で登場したProcessingのJavascript版である。
+}。
+\begin{table}[t]
+  \begin{center}
+  \caption{使用ライブラリ。()内はバージョン情報を示す}  
+  \label{table:libraries}
+  \begin{tabularx}{\textwidth}{l X}
+    \hline
+    \textbf{ライブラリ} & \textbf{用途} \\
+    \hline
+    Vue.js (2.6.14) &
+    各ページ（メイン画面、データ選択画面など）や、それらのページの子モジュールを構成するために用いた。 \\
+    Vuetify (2.6.0) &
+    Vue.jsと連携するかたちで、webの基本的なUIパーツ表現を簡易に作成できる。各画面をはじめ、メイン画面では左右ドロワメニューや上部バーメニューのUIを構成するために用いた。 \\
+    p5.js (1.4.1) &
+    インタラクティブなスケッチを描くのに優れている。メイン画面のプレイスペースの構成に用いた。ただし、点をマウスで選択する機能を実現するにはプレイスペースの3D空間と画面上2D空間の紐づける必要があるが、そうした情報を取得するメソッドは本ライブラリには搭載されていなかったので、自前で計算した。 \\
+    \hline
+  \end{tabularx}
+  \end{center}
+\end{table}
+
+本アプリは、Firebase
+\footnote{Google社が提供するwebアプリ開発プラットフォーム（BaaS）である。https://firebase.google.com/}
+にて運用しており、
+データベース（以下、DBと記載）にはFirestore、ホスティングにはFirebase Hostingをもちいている。
+Firestoreは階層構造型のDBである。
+いわゆるNoSQL型と呼ばれるもので、
+SQL型（テーブル型）だと、各行にレコードが並び、各列にレコードのもつ項目変数が並ぶ、という行列構造だが、
+NoSQL型のFirestoreはそれとは異なる。
+Firestoreでは、コレクションのなかに複数のドキュメント（これが各レコードに相当）が格納されており、
+各ドキュメントが項目変数の集合として表現されている。
+本アプリでは以下に示す4種類のコレクションで構成している（\autoref{table:user}〜\autoref{table:plots}）。
+\begin{description}
+  \item[usersコレクション]\mbox{傘下の各ドキュメントは各ユーザの情報をもつ}  
+  \item[entriesコレクション]\mbox{傘下の各ドキュメントは各表情エントリの情報をもつ}
+  \item[plotsコレクション]\mbox{傘下の各ドキュメントは各身体運動データの情報をもつ}  
+  \item [plotMirrorsコレクション]\mbox{傘下の各ドキュメントは各身体運動データの概要的情報やメタ情報をもつ}      
+\end{description}
+なお、斜体で記したフィールド名（例：markerID）は、実際のドキュメントにおいてはこのフィールド名をそのままもっているのではなく、
+任意のフィールド名が入り、同様のフィールドがたくさん並ぶことを表す。
+紙面節約のため、それらの一般形たる仮のフィールド名をつけ、ひとつのフィールドとして仮記載している。
+
+% users
+\begin{table}[H]
+  \centering  
+  \caption{users コレクションのドキュメント構造}                %和文 caption
+  \label{table:user}
+  \begin{tabular}{|l|l|p{7cm}|}
+    \hline
+    \bf フィールド名 & \bf 型 & \bf 説明 \\
+    \hline
+    accessToken & string & ユーザの認証トークン \\
+    % displayName & null/string & 表示名（未設定の場合は null） \\
+    email & string & ユーザのメールアドレス \\
+    exist & boolean & ドキュメント存在のフラグ \\
+    userID & string & ユーザID \\
+    entries & array of map & ユーザが作成したエントリ群の概要（entryID、plotID、表情オノマトペ） \\
+    % photoURL & null/string & プロフィール画像のURL（未設定なら null） \\
+    plots & array of map & ユーザがプレイしたplotID群 \\
+    timestamp & number & ドキュメント作成日時 \\
+    \hline
+  \end{tabular}
+\end{table}
+% entries
+\begin{table}[H]
+  \centering
+  \caption{entries コレクションのドキュメント構造}  
+  \label{table:entries}
+  \begin{tabular}{|l|l|p{8cm}|}
+    \hline
+    \bf フィールド名 & \bf 型 & \bf 説明 \\
+    \hline
+    exist & boolean & エントリが有効かどうかのフラグ \\
+    frameRange & array [int, int] & エントリが対応するフレーム範囲（開始フレームと終了フレーム） \\
+    hyojo & string & エントリに対応する表情やオノマトペのテキスト（例：「ぐぃーーーん」） \\
+    hyojoSyllables & array of map & 表情の音節情報。各要素が syllable, frameRange, text を持つ \\
+    \quad └ syllable & string & 音節単位の表現（例：「ぐぃーー」） \\
+    \quad └ frameRange & array [int, int] & その音節が対応するフレーム範囲 \\
+    \quad └ text & string & 補足テキスト（未入力の場合もあり） \\
+    hyojoFigure & map & モーションや形状の描画に関するパラメータ群 \\
+    \quad └ activeMarkers & array of string & 使用中のマーカ名一覧 \\
+    \quad └ camParams & map & カメラの設定（位置） \\
+    \quad └ dotSize & number & 点のサイズ \\
+    \quad └ edges & array of map & 線分情報（例：どのマーカ同士を結ぶか） \\
+    \quad └ endFrame & int & 終了フレーム \\
+    \quad └ frameCount & int & 現在フレーム \\
+    \quad └ hojosenType & string & 補助線の種類（線分、内接円、など） \\
+    \quad └ isEnkinkan & boolean & 遠近感の有無 \\    
+    \quad └ startFrame & int & 開始フレーム \\
+    \quad └ trailDiff & int & 軌跡の間隔 \\
+    \quad └ trailLength & int & 軌跡の長さ \\
+    \quad └ triangles & array & 三角形の情報（互いに結ばれた3点関係） \\    
+    markerIDs & array of string & 使用されたマーカIDの一覧 \\
+    userID & string & このエントリを作成したユーザのID \\
+    entryID & string & このエントリ自体の一意なID \\
+    plotID & string & このエントリが作成された身体運動データのID \\
+    text & string & ユーザーが記述したメタ認知記述 \\
+    timestamp & number & ドキュメント作成日時 \\
+    \hline
+  \end{tabular}
+\end{table}
+% plots
+\begin{table}[H]
+  \centering
+  \caption{plotMirrors コレクションのドキュメント構造}  
+  \label{table:plotMirrors}
+  \begin{tabular}{|l|l|p{8cm}|}
+    \hline
+    \bf フィールド名 & \bf 型 & \bf 説明 \\
+    \hline
+    exist & boolean & このデータが有効かどうかのフラグ \\
+    fileName & string & 元のplotファイル名（例：人物名＋日付など） \\
+    plotID & string & 対応するplot本体のドキュメントID（plotsコレクションへの参照用） \\
+    timestamp & number (Unix時間) & 登録または更新された時刻（ミリ秒単位） \\
+    \hline
+  \end{tabular}
+\end{table}
+% plotMirrors
+\begin{table}[H]
+  \centering
+  \caption{plots コレクションのドキュメント構造}    
+  \label{table:plots}
+  \begin{tabular}{|l|l|p{8cm}|}
+    \hline
+    \bf フィールド名 & \bf 型 & \bf 説明 \\
+    \hline
+    exist & boolean & このplotデータが有効かどうかのフラグ \\
+    fileName & string & 対象者や日付などを含むデータ名 \\
+    fps & number & 1秒あたりのフレーム数（例：120fps） \\
+    hyojoIDs & array of string & 関連づけられた表情データのID群（空の場合もあり） \\
+    index & number & 表示順やデフォルト選択に用いる番号 \\
+    krkrIDs & array of string & 関連する補助線などのID群 \\
+    plotID & string & このplotの一意なID（外部参照用） \\
+    plots & map & 各マーカの記録（斜体で書かれたキーは実際には各マーカのidや名前が入る \\
+    \quad └ $markerID$ & map & マーカのID \\
+    \quad\quad └ $id$ & string & マーカのID \\
+    \quad\quad └ $name$ & string & マーカの日本語名 \\
+    \quad\quad └ plots & array of map & 各フレームに対応する座標（x, y, z）情報（例：723点） \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\section{開発環境}
+本アプリの開発にもちいたPCは、Apple社のiMac2020(Retina 5K, 27-inch)である。
+このハードウェア詳細は以下である。
+
+\begin{itemize}
+  \item {プロセッサ: 3.8 GHz 8コアIntel Core i7}
+  \item {グラフィックス: AMD Radeon Pro 5500 XT 8 GB + }
+  \item {メモリ: 40 GB 2667 MHz DDR4}  
+\end{itemize}
+プログラミングのエディタには、Microsoft社のVisual Studio Code\cite{vscode}をもちいた。
