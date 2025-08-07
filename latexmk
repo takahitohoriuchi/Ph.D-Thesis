@@ -35,6 +35,7 @@ $pdf_mode = 3;
 # 拡張子など
 $bibtex_use = 1;
 $silent = 1;
+$root_filename = 'data.tex';
 ; DEBUG:20250528の状態
 
 # 出力ディレクトリを out に固定！

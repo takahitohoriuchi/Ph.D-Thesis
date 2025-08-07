@@ -4,19 +4,12 @@
 \usepackage[dvipdfmx]{graphicx}%図
 \usepackage[dvipdfmx]{hyperref}%ハイパーリンク
 \usepackage{longtable}
-
-% \usepackage{soul}%改行あり下線機能
-% \usepackage{cleveref}
-
-
 \renewcommand{\figureautorefname}{図}
 \renewcommand{\tableautorefname}{表}
 \renewcommand{\equationautorefname}{式}
-% \renewcommand{\thechapter}{\thepart-\arabic{chapter}}
-% \renewcommand{\thefigure}{\Alph{part}-\arabic{chapter}.\arabic{figure}}
-% \renewcommand{\thetable}{\Alph{part}-\arabic{chapter}.\arabic{table}}
-% \crefname{section}{節}{節}
-% \crefname{chapter}{章}{章}
+\makeatletter
+\@removefromreset{chapter}{part}
+\makeatother
 
 
 \usepackage{tcolorbox}
@@ -25,7 +18,7 @@
 
 % メタ認知記述はグレー背景
 \newtcolorbox{mynote}{
-  colframe=black,        % 線の色
+  colframe=black,        % 線の色  
   boxrule=0.5pt,         % 線の太さ
   colback=gray!10, 
   sharp corners,         % 角を直角に
@@ -75,7 +68,6 @@
 \usepackage{listings}% ソースコード用
 \usepackage{mdframed}
 \usepackage{xcolor}% 色のパッケージ
-\setcounter{tocdepth}{3}
 \usepackage{color}
 \usepackage{subcaption}
 \usepackage{overpic}  % 図にナンバリング
@@ -128,33 +120,33 @@
 \newcommand{\node}{点}
 \newcommand{\edge}{連結線}
 \newcommand{\dynamicKrkr}{動的連結}
-
+% :::個別ファイル作業時のみ
 % このdocumentclassからbeginまでを、プリアンブルと呼ぶ
 % NOTE:パスを指定するとき、「./」は書いてはいけない！！！！
-\includeonly{
-  title.tex,
-  introduction/how2read.tex,  
-  introduction/chapter1.tex,
-  introduction/chapter2.tex,
-  introduction/chapter3.tex,
-  introduction/chapter4.tex,
-  part1/chapter1.tex,  
-  part1/chapter2.tex,
-  part1/chapter3.tex,
-  part1/chapter4.tex,
-  part1/chapter5.tex,
-  part2/chapter1.tex,
-  part2/chapter2.tex,
-  part2/chapter3.tex,
-  part2/chapter4.tex,
-  part2/chapter5.tex,
-  part2/chapter6.tex,    
-  conclusion/chapter1.tex,
-  conclusion/addendum.tex,  
-  conclusion/acknowledgement.tex,
-  } 
-
+% \includeonly{
+%   introduction/how2read.tex,  
+%   introduction/chapter1.tex,
+%   introduction/chapter2.tex,
+%   introduction/chapter3.tex,
+%   introduction/chapter4.tex,
+%   part1/chapter1.tex,  
+%   part1/chapter2.tex,
+%   part1/chapter3.tex,
+%   part1/chapter4.tex,
+%   part1/chapter5.tex,
+%   part2/chapter1.tex,
+%   part2/chapter2.tex,
+%   part2/chapter3.tex,
+%   part2/chapter4.tex,
+%   part2/chapter5.tex,
+%   part2/chapter6.tex,    
+%   conclusion/chapter1.tex,
+%   conclusion/addendum.tex,  
+%   conclusion/acknowledgement.tex,
+%   } 
+% :::
 \begin{document}
+\nocite{suwa:2016}
 \input{title.tex}
 \pagenumbering{roman}  % i, ii, iii, ...
 \input{abstract_jp.tex}
@@ -169,46 +161,36 @@
 \listoffigures
 % 表目次
 \listoftables
-% % \input{abstract.tex}
+
 \include{introduction/how2read.tex}
 \clearpage
 \pagenumbering{arabic}
 \include{introduction/chapter1.tex}
-\include{introduction/chapter2.tex}
-\include{introduction/chapter3.tex}
-\include{introduction/chapter4.tex}
+% \include{introduction/chapter2.tex}
+% \include{introduction/chapter3.tex}
+% \include{introduction/chapter4.tex}
 
-\include{part1/chapter1.tex}
-% \include{part1/chapter6.tex}
-\include{part1/chapter2.tex}
-\include{part1/chapter3.tex}
-\include{part1/chapter4.tex}
-\include{part1/chapter5.tex}
+% \include{part1/chapter1.tex}
+% \include{part1/chapter2.tex}
+% \include{part1/chapter3.tex}
+% \include{part1/chapter4.tex}
+% \include{part1/chapter5.tex}
 
-\include{part2/chapter1.tex}
-\include{part2/chapter2.tex}
-\include{part2/chapter3.tex}
-\include{part2/chapter4.tex}
-\include{part2/chapter5.tex}
-\include{part2/chapter6.tex}
+% \include{part2/chapter1.tex}
+% \include{part2/chapter2.tex}
+% \include{part2/chapter3.tex}
+% \include{part2/chapter4.tex}
+% \include{part2/chapter5.tex}
+% \include{part2/chapter6.tex}
 
-\include{conclusion/chapter1.tex}
-\include{conclusion/addendum.tex}
-\include{conclusion/acknowledgement.tex}
+% \include{conclusion/chapter1.tex}
+% \include{conclusion/addendum.tex}
+% \include{conclusion/acknowledgement.tex}
 
 % 下のサイトにいろんなスタイルあり。どれかを選ぶ。
 % https://mathlandscape.com/latex-bibstyles/
 
 \bibliographystyle{jplain}%日本語連番形式
-% \bibliographystyle{apalike}
-% \bibliographystyle{apa}
 \bibliography{reference}
-% \bibliographystyle{acm}%ACM形式
-
-% \bibliographystyle{apa}
-% \printbibliography
-
-% :::補論・付録
-% \include{conclusion/appendix.tex}
 
 \end{document}
