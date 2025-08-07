@@ -115,11 +115,7 @@
   frame=single                         % 枠線のスタイル
 }
 
-% 用語の定義
-\newcommand{\hyojoForm}{表情図形}
-\newcommand{\node}{点}
-\newcommand{\edge}{連結線}
-\newcommand{\dynamicKrkr}{動的連結}
+
 % :::個別ファイル作業時のみ
 % このdocumentclassからbeginまでを、プリアンブルと呼ぶ
 % NOTE:パスを指定するとき、「./」は書いてはいけない！！！！
@@ -146,7 +142,7 @@
 %   } 
 % :::
 \begin{document}
-\nocite{suwa:2016}
+
 \input{title.tex}
 \pagenumbering{roman}  % i, ii, iii, ...
 \input{abstract_jp.tex}
@@ -166,31 +162,29 @@
 \clearpage
 \pagenumbering{arabic}
 \include{introduction/chapter1.tex}
-% \include{introduction/chapter2.tex}
-% \include{introduction/chapter3.tex}
+\include{introduction/chapter2.tex}
+\include{introduction/chapter3.tex}
 % \include{introduction/chapter4.tex}
-
 % \include{part1/chapter1.tex}
 % \include{part1/chapter2.tex}
 % \include{part1/chapter3.tex}
 % \include{part1/chapter4.tex}
 % \include{part1/chapter5.tex}
-
 % \include{part2/chapter1.tex}
 % \include{part2/chapter2.tex}
 % \include{part2/chapter3.tex}
 % \include{part2/chapter4.tex}
 % \include{part2/chapter5.tex}
 % \include{part2/chapter6.tex}
-
 % \include{conclusion/chapter1.tex}
 % \include{conclusion/addendum.tex}
 % \include{conclusion/acknowledgement.tex}
 
 % 下のサイトにいろんなスタイルあり。どれかを選ぶ。
 % https://mathlandscape.com/latex-bibstyles/
-
+% \nocite{*}
 \bibliographystyle{jplain}%日本語連番形式
+% \nocite{*}
 \bibliography{reference}
 
 \end{document}
