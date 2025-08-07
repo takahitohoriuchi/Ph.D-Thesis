@@ -348,7 +348,12 @@ cmd+Eキーのキーボードショートカットにより、マウスオンし
 \textbf{補助線スタイル}を多種類用意した。
 左ドロワメニューに並ぶ各チップ（\autoref{fig:playfull_menu}左側2段目）をクリックすると、補助線のスタイルが変わる。
 デフォルトのスタイルは2点間の「線分」である。
-補助線スタイルの一覧を\autoref{table:hojosen_type}に示す。
+補助線スタイルの一覧を\autoref{table:hojosen_type}と\autoref{fig:hojosen_styles1}・\autoref{fig:hojosen_styles2}に示す。
+\textcolor{red}{
+  \autoref{fig:hojosen_styles1}・\autoref{fig:hojosen_styles2}はすべて、同じ補助線パタン・フレームで統一し、補助線スタイルのみ変えてある。
+それは、\autoref{fig:hojosen_styles1}の最上段の「デフォルト」スタイルからわかるように、「両側頭と胸骨」「右側の肩と足と胸骨」「左側の肩と足と胸骨」という3つの三角形を作るような補助線パタンで統一してある。
+}
+
 B.ムナーリのデザイン教本『空想旅行』\cite{munari:1992}では、あるランダムな点群の布置に、線や円など素朴な描画要素を描きくわえて「ふたりひとくみ」や「音符」や「摩天楼」や「発芽」など、実に様々に点群の関係づけや見立てができることを示している。
 \ref{sec:design}で述べた先行研究\cite{konno_et_al:2016}でも様々なインスタレーション環境の条件（映像効果の種類）から選ぶことを促している。
 これらに関連して、補助線のスタイルによってみえる「表情」は変わりうると考えた。
@@ -356,18 +361,21 @@ B.ムナーリのデザイン教本『空想旅行』\cite{munari:1992}では、
   \begin{center}
   \caption{補助線スタイル一覧}                % 和文 caption  
   \label{table:hojosen_type}
-  \begin{tabular}[hbt]{c l}
+  \begin{tabular}[hbt]{l l}
   \hline
   \bf スタイル名 & \bf 説明 \\
   \hline
-  デフォルト & 各線分IJ \\
-  線延長 & 各線分IJを両端に1倍ずつ延長 \\
-  線延長10倍 & 各線分IJを両端に5倍ずつ延長\\
-  外接円 & 各△IJKの外接円 \\
-  内接円 & 各△IJKの内接円 \\
-  外/内接円 & 各△IJKの外接円と内接円 \\
-  注視点からの円 & 各△IJOの外接円（Oはカメラ注視点） \\    
-  大三角 & 各△IJKを3倍拡大し重心をOに固定で描く \\    
+  \href{https://takahitohoriuchi.github.io/hj-playground_gallery/style_a.html}{\textbf{デフォルト}} & 各線分IJ \\
+  \href{https://takahitohoriuchi.github.io/hj-playground_gallery/style_b.html}{\textbf{線延長}} & 各線分IJを両端に1倍ずつ延長 \\
+  \href{https://takahitohoriuchi.github.io/hj-playground_gallery/style_c.html}{\textbf{線延長10倍}} & 各線分IJを両端に5倍ずつ延長\\
+  \href{https://takahitohoriuchi.github.io/hj-playground_gallery/style_d.html}{\textbf{外接円}} & 各△IJKの外接円 \\
+  \href{https://takahitohoriuchi.github.io/hj-playground_gallery/style_e.html}{\textbf{内接円}} & 各△IJKの内接円 \\
+  \href{https://takahitohoriuchi.github.io/hj-playground_gallery/style_f.html}{\textbf{外\&内接円}} & 各△IJKの外接円と内接円 \\
+  \href{https://takahitohoriuchi.github.io/hj-playground_gallery/style_g.html}{\textbf{外接円+デフォルト}} & 各△IJKとその外接円 \\
+  \href{https://takahitohoriuchi.github.io/hj-playground_gallery/style_h.html}{\textbf{内接円+デフォルト}} & 各△IJKとその内接円 \\
+  \href{https://takahitohoriuchi.github.io/hj-playground_gallery/style_i.html}{\textbf{外\&内接円+デフォルト}} & 各△IJKとその外接円と内接円 \\
+  \href{https://takahitohoriuchi.github.io/hj-playground_gallery/style_j.html}{\textbf{注視点からの円}} & 各△IJOの外接円（Oはカメラ注視点） \\    
+  \href{https://takahitohoriuchi.github.io/hj-playground_gallery/style_k.html}{\textbf{大三角}} & 各△IJKを3倍拡大し重心をOに固定で描く \\    
   \hline
   \end{tabular}
   \end{center}
@@ -378,18 +386,71 @@ B.ムナーリのデザイン教本『空想旅行』\cite{munari:1992}では、
 \begin{figure}[H]    
   \setlength{\tabcolsep}{2pt} % ← 横のスキマを詰める！
   \renewcommand{\arraystretch}{0.95} % ← 縦のスキマ（ラベルと画像間）
-  % 上段
+  % デフォルト
   \begin{center}    
-    \includegraphics[width=\linewidth]{./images/jikken/sara_r.pdf}
+    \href{https://takahitohoriuchi.github.io/hj-playground_gallery/style_a.html}{\includegraphics[width=\linewidth]{./images/hojosen_style_default.pdf}}
   \end{center}
-  \vspace{-0.5em}  
-  % 下段
+  \vspace{-1.6em}    
+  % 線延長
   \begin{center}    
+    \href{https://takahitohoriuchi.github.io/hj-playground_gallery/style_b.html}{\includegraphics[width=\linewidth]{./images/hojosen_style_encho.pdf}}
   \end{center}
-      
-  \caption{\textcolor{red}{補助線スタイル一覧}}          
-  \label{fig:hojosen_styles}
+  \vspace{-1.6em}    
+  % 線延長10倍
+  \begin{center}    
+    \href{https://takahitohoriuchi.github.io/hj-playground_gallery/style_c.html}{\includegraphics[width=\linewidth]{./images/hojosen_style_10encho.pdf}}
+  \end{center}
+  \vspace{-1.6em}    
+  % 外接円
+  \begin{center}    
+    \href{https://takahitohoriuchi.github.io/hj-playground_gallery/style_d.html}{\includegraphics[width=\linewidth]{./images/hojosen_style_gaisetsu.pdf}}
+  \end{center}
+  \vspace{-1.6em}    
+  % 内接円  
+  \begin{center}    
+    \href{https://takahitohoriuchi.github.io/hj-playground_gallery/style_e.html}{\includegraphics[width=\linewidth]{./images/hojosen_style_naisetsu.pdf}}
+  \end{center}
+  \vspace{-1.6em}    
+  % 内あんど外接円  
+  \begin{center}    
+    \href{https://takahitohoriuchi.github.io/hj-playground_gallery/style_f.html}{\includegraphics[width=\linewidth]{./images/hojosen_style_naigai.pdf}}
+  \end{center}        
+  \caption{\textcolor{red}{補助線スタイル一覧（その1）}}          
+  \label{fig:hojosen_styles1}
 \end{figure}
+
+\begin{figure}[H]    
+  \setlength{\tabcolsep}{2pt} % ← 横のスキマを詰める！
+  \renewcommand{\arraystretch}{0.95} % ← 縦のスキマ（ラベルと画像間）
+  % 外接円+デフォルト
+  \begin{center}    
+    \href{https://takahitohoriuchi.github.io/hj-playground_gallery/style_g.html}{\includegraphics[width=\linewidth]{./images/hojosen_style_gaidef.pdf}}
+  \end{center}
+  \vspace{-1.6em}    
+  % 内接円+デフォルト
+  \begin{center}    
+    \href{https://takahitohoriuchi.github.io/hj-playground_gallery/style_h.html}{\includegraphics[width=\linewidth]{./images/hojosen_style_naidef.pdf}}
+  \end{center}
+  \vspace{-1.6em}    
+  % 内外接円+デフォルト
+  \begin{center}    
+    \href{https://takahitohoriuchi.github.io/hj-playground_gallery/style_i.html}{\includegraphics[width=\linewidth]{./images/hojosen_style_naigaidef.pdf}}
+  \end{center}
+  \vspace{-1.6em}    
+  % 注視点からの円
+  \begin{center}    
+    \href{https://takahitohoriuchi.github.io/hj-playground_gallery/style_j.html}{\includegraphics[width=\linewidth]{./images/hojosen_style_chushien.pdf}}
+  \end{center}
+  \vspace{-1.6em}    
+  % 大三角
+  \begin{center}    
+    \href{https://takahitohoriuchi.github.io/hj-playground_gallery/style_k.html}{\includegraphics[width=\linewidth]{./images/hojosen_style_daisankaku.pdf}}
+  \end{center}          
+  \caption{\textcolor{red}{補助線スタイル一覧（その2）}}          
+  \label{fig:hojosen_styles2}
+\end{figure}
+
+
 
 
 
