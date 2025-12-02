@@ -13,7 +13,7 @@
 *.lot
 
 # PDF（必要なら無視）
-*.pdf
+# *.pdf
 
 # VSCode設定
 .vscode/
