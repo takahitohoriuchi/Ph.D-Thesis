@@ -11,6 +11,44 @@
 \@removefromreset{chapter}{part}
 \makeatother
 
+\usepackage{xcolor}% 色のパッケージ
+% ==== マスター切替（ここだけ操作）====
+\newif\ifshowrevisions
+\showrevisionstrue          % ← 強調版（色＋余白バッジを表示）
+% \showrevisionsfalse       % ← 最終版（色もバッジも非表示）
+% ==== 本文色マクロ（X/Y/XY/T）====
+%   showrevisions=true  のときだけ色を付ける。false なら素の本文。
+\newcommand{\SW}[1]{\ifshowrevisions{\color{red!80!white}#1}\else#1\fi}
+\newcommand{\IS}[1]{\ifshowrevisions{\color{blue!70!white}#1}\else#1\fi}
+\newcommand{\NK}[1]{\ifshowrevisions{\color{purple!80!white}#1}\else#1\fi}
+\newcommand{\NS}[1]{\ifshowrevisions{\color{brown!90!white}#1}\else#1\fi}
+\newcommand{\T}[1]{\ifshowrevisions{\color{brown!90!black}#1}\else#1\fi}
+
+% ==== 余白バッジ用の体裁 ====
+\renewcommand*{\marginfont}{\small\sffamily}
+% 色（必要なら調整OK）
+\colorlet{SWcol}{red!80!white}
+\colorlet{IScol}{blue!70!white}
+\colorlet{NKcol}{purple!80!white}
+\colorlet{NScol}{brown!90!white}
+\colorlet{Tcol}{brown!90!black}
+
+% ==== 余白バッジ（本文ではない場所に指摘IDを表示）====
+%   showrevisions=true のときだけ出す
+\newcommand{\ridbadge}[2]{%
+  \ifshowrevisions
+    \marginnote{%
+      \setlength{\fboxsep}{1pt}%
+      \colorbox{#1}{\textcolor{white}{\textsf{\bfseries #2}}}%
+    }%
+  \fi
+}
+\newcommand{\ridSW}[1]{\ridbadge{SWcol}{#1}}
+\newcommand{\ridIS}[1]{\ridbadge{IScol}{#1}}
+\newcommand{\ridNK}[1]{\ridbadge{NKcol}{#1}}
+\newcommand{\ridNS}[1]{\ridbadge{NScol}{#1}}
+\newcommand{\ridT}[1]{\ridbadge{Tcol}{#1}}
+
 
 \usepackage{tcolorbox}
 \tcbuselibrary{skins}
@@ -67,7 +105,7 @@
 \usepackage{okumacro}
 \usepackage{listings}% ソースコード用
 \usepackage{mdframed}
-\usepackage{xcolor}% 色のパッケージ
+
 \usepackage{color}
 \usepackage{subcaption}
 \usepackage{overpic}  % 図にナンバリング
@@ -78,6 +116,10 @@
 \usepackage{tabularx}
 
 
+% 索引パッケージ
+\usepackage{imakeidx}
+\makeindex[name=term, title=事項索引, intoc]
+\makeindex[name=person, title=人名索引, intoc]
 
 
 
@@ -119,41 +161,42 @@
 \begin{document}
 \setcounter{tocdepth}{3}    % （項を目次に出す）
 
-\input{title.tex}
-\pagenumbering{roman}  % i, ii, iii, ...
-\input{abstract_jp.tex}
-\input{abstract_en.tex}
+% \input{title.tex}
+% \pagenumbering{roman}  % i, ii, iii, ...
+% \input{abstract_jp.tex}
+% \input{abstract_en.tex}
 % 脚注をアスタリスクなしの連番形式にする
 \makeatletter
 \renewcommand{\thefootnote}{\arabic{footnote}}
 \makeatother
 % 目次
-\tableofcontents
+% \tableofcontents
 % 図目次
-\listoffigures
+% \listoffigures
 % 表目次
-\listoftables
+% \listoftables
 
-\include{introduction/how2read.tex}
-\clearpage
-\pagenumbering{arabic}
+% \include{introduction/how2read.tex}
+% \clearpage
+% \pagenumbering{arabic}
 \include{introduction/chapter1.tex}
 \include{introduction/chapter2.tex}
 \include{introduction/chapter3.tex}
 \include{introduction/chapter4.tex}
-\include{part1/chapter1.tex}
-\include{part1/chapter2.tex}
-\include{part1/chapter3.tex}
-\include{part1/chapter4.tex}
-\include{part1/chapter5.tex}
-\include{part2/chapter1.tex}
-\include{part2/chapter2.tex}
-\include{part2/chapter3.tex}
-\include{part2/chapter4.tex}
-\include{part2/chapter5.tex}
-\include{part2/chapter6.tex}
-\include{conclusion/chapter1.tex}
-\include{conclusion/acknowledgement.tex}
+% \include{part1/chapter1.tex}
+% \include{part1/chapter2.tex}
+% \include{part1/chapter3.tex}
+% \include{part1/chapter4.tex}
+% \include{part1/chapter5.tex}
+% \include{part2/chapter1.tex}
+% \include{part2/chapter2.tex}
+% \include{part2/chapter3.tex}
+% \include{part2/chapter4.tex}
+% \include{part2/chapter5.tex}
+% \include{part2/chapter6.tex}
+% \include{conclusion/chapter1.tex}
+% \include{conclusion/acknowledgement.tex}
+\include{indexdfs.tex}
 
 % 下のサイトにいろんなスタイルあり。どれかを選ぶ。
 % https://mathlandscape.com/latex-bibstyles/

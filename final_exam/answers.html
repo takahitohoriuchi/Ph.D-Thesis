@@ -1,107 +1,196 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <title>たぴ博論 最終審査ナビ</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: system-ui, sans-serif;
-      display: grid;
-      grid-template-columns: 2fr 3fr;
-      grid-template-rows: 1fr 1fr;
-      height: 100vh;
-      gap: 4px;
-    }
-    #answers {
-      grid-column: 1 / 2;
-      grid-row: 1 / 3;
-      overflow: auto;
-      padding: 8px;
-      border-right: 1px solid #ddd;
-    }
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-    #thesis-frame {
-      grid-column: 2 / 3;
-      grid-row: 1 / 2;
-    }
-    #slides-frame {
-      grid-column: 2 / 3;
-      grid-row: 2 / 3;
-    }
-    .jump {
-      cursor: pointer;
-      color: blue;
-      text-decoration: underline;
-    }
-  </style>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>堀内最終審査資料🎁🎄</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
 
-  <!-- アンサー本文（司令塔） -->
-  <div id="answers">
-    <h1>回答書（ナビ付き）</h1>
+      body {
+        margin: 0;
+        height: 100vh;
+        width: 100vw;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        overflow: hidden;
+      }
 
-    <p>
-      【コメント1への回答】<br>
-      本件は博論第3章の方法（p.47）およびスライドp.12に対応します。<br>
-      <span class="jump"
-        data-thesis-page="47"
-        data-slides-page="12">
-        → 博論 & スライドを該当箇所にジャンプ
-      </span>
-    </p>
+      /* 全体レイアウト：左右分割 */
+      #container {
+        display: flex;
+        height: 100%;
+        width: 100%;
+      }
 
-    <p>
-      【コメント2への回答】<br>
-      詳細な議論は博論p.120〜121、スライドp.30です。<br>
-      <span class="jump"
-        data-thesis-page="120"
-        data-slides-page="30">
-        → 該当箇所を表示
-      </span>
-    </p>
+      /* 左側（回答＋スライド） */
+      #left-pane {
+        flex: 0 0 35%;   /* 初期幅：35%（適宜変えてOK） */
+        min-width: 200px;
+        max-width: 80vw;
+        display: flex;
+        flex-direction: column;
+        border-right: 1px solid #ddd;
+        background: #fafafa;
+      }
 
-    <!-- 必要なだけ同じパターンで増やす -->
-  </div>
+      /* 左上：回答書 */
+      #answers {
+        flex: 1;              /* 回答書：少し大きめ */
+        overflow-y: auto;
+        padding: 12px;
+        border-bottom: 1px solid #ddd;
+      }
 
-  <!-- 博論PDF -->
-  <iframe
-    id="thesis-frame"
-    src="thesis.pdf#page=1">
-  </iframe>
+      /* 左下：スライドPDF */
+      #slides-wrapper {
+        flex: 1.2;
+        min-height: 0;
+      }
 
-  <!-- スライドPDF -->
-  <iframe
-    id="slides-frame"
-    src="slides.pdf#page=1">
-  </iframe>
+      /* 右側：博論PDF全面 */
+      #right-pane {
+        flex: 1;
+        padding: 4px;
+      }
 
-  <script>
-    const thesisBase = 'thesis.pdf';
-    const slidesBase = 'slides.pdf';
+      #thesis-wrapper {
+        height: 100%;
+      }
 
-    const thesisFrame = document.getElementById('thesis-frame');
-    const slidesFrame = document.getElementById('slides-frame');
+      /* 共通PDFビュー領域 */
+      iframe {
+        width: 100%;
+        height: 100%;
+        border: 1px solid #ccc;
+        background: #f5f5f5;
+      }
 
-    document.querySelectorAll('.jump').forEach(el => {
-      el.addEventListener('click', () => {
-        const tPage = el.dataset.thesisPage;
-        const sPage = el.dataset.slidesPage;
+      /* 仕切りバー（左右幅調整） */
+      #divider {
+        width: 4px;
+        cursor: col-resize;
+        background: #ddd;
+        flex-shrink: 0;
+      }
 
-        if (tPage) {
-          thesisFrame.src = `${thesisBase}#page=${tPage}`;
-        }
-        if (sPage) {
-          slidesFrame.src = `${slidesBase}#page=${sPage}`;
-        }
+      /* ジャンプリンク */
+      .jump {
+        cursor: pointer;
+        color: #0066cc;
+        text-decoration: underline;
+      }
+      .jump:hover {
+        color: #003f7d;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="container">
+      <!-- 左側：回答 + スライド -->
+      <div id="left-pane">
+        <div id="answers">
+          <h1>最終審査資料🎁🎅</h1>
+
+          <p>
+            【コメント1への回答】<br>
+            博論 p.47 ・ スライド p.12<br>
+            <span class="jump" data-thesis-page="47" data-slides-page="12">
+              → 該当箇所へジャンプ
+            </span>
+          </p>
+
+          <p>
+            【コメント2への回答】<br>
+            博論 p.120 ・ スライド p.30<br>
+            <span class="jump" data-thesis-page="120" data-slides-page="30">
+              → 該当箇所へジャンプ
+            </span>
+          </p>
+        </div>
+
+        <!-- 左下：スライド表示 -->
+        <div id="slides-wrapper">
+          <iframe id="slides-frame" src="slides.pdf#page=1&zoom=page-fit"></iframe>
+        </div>
+      </div>
+
+      <!-- 幅調整バー -->
+      <div id="divider"></div>
+
+      <!-- 右側：博論PDF全面 -->
+      <div id="right-pane">
+        <div id="thesis-wrapper">
+          <iframe id="thesis-frame" src="thesis.pdf#page=1&zoom=page-width"></iframe>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      /* ========= PDFジャンプ（安定版） ========= */
+
+      const thesisBase = "thesis.pdf";
+      const slidesBase = "slides.pdf";
+
+      const thesisFrame = document.getElementById("thesis-frame");
+      const slidesFrame = document.getElementById("slides-frame");
+
+      function forceJump(frame, url) {
+        frame.src = "about:blank";
+        setTimeout(() => {
+          frame.src = `${url}&cachekill=${Date.now()}`;
+        }, 30);
+      }
+
+      document.querySelectorAll(".jump").forEach((el) => {
+        el.addEventListener("click", () => {
+          const tPage = el.dataset.thesisPage;
+          const sPage = el.dataset.slidesPage;
+
+          if (tPage)
+            forceJump(thesisFrame, `${thesisBase}#page=${tPage}&zoom=page-width`);
+          if (sPage)
+            forceJump(slidesFrame, `${slidesBase}#page=${sPage}&zoom=page-fit`);
+        });
       });
-    });
-  </script>
 
-</body>
+      /* ========= 左右リサイズ ========= */
+
+      const leftPane = document.getElementById("left-pane");
+      const divider = document.getElementById("divider");
+
+      let dragging = false;
+      let startX = 0;
+      let startWidth = 0;
+
+      divider.addEventListener("pointerdown", (e) => {
+        dragging = true;
+        startX = e.clientX;
+        startWidth = leftPane.getBoundingClientRect().width;
+        divider.setPointerCapture(e.pointerId);
+      });
+
+      divider.addEventListener("pointermove", (e) => {
+        if (!dragging) return;
+
+        const dx = e.clientX - startX;
+        const containerWidth = window.innerWidth;
+
+        let newWidth = startWidth + dx;
+        newWidth = Math.max(200, Math.min(containerWidth * 0.8, newWidth));
+
+        leftPane.style.flexBasis = `${newWidth}px`;
+      });
+
+      divider.addEventListener("pointerup", (e) => {
+        dragging = false;
+        divider.releasePointerCapture(e.pointerId);
+      });
+
+      divider.addEventListener("lostpointercapture", () => {
+        dragging = false;
+      });
+    </script>
+  </body>
 </html>
